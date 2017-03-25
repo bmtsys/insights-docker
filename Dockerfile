@@ -1,14 +1,26 @@
-FROM appcelerator/alpine:3.5.1
-MAINTAINER Nicolas Degory <ndegory@axway.com>
+FROM appcelerator/alpine:3.5.2
 
 RUN apk --no-cache add nodejs
 
-ENV GRAFANA_VERSION 4.1.1
+ENV GRAFANA_VERSION 4.2.0
+
+ENV GOLANG_VERSION 1.8
+ENV GOLANG_SRC_URL https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz
+ENV GOLANG_SRC_SHA256 406865f587b44be7092f206d73fc1de252600b79b3cacc587b74b5ef5c623596
 
 RUN apk update && apk upgrade && \
     apk --no-cache add fontconfig && \
-    apk --virtual build-deps add build-base go git gcc python musl-dev make nodejs-dev fontconfig-dev && \
+    apk --virtual build-deps add build-base go openssl git gcc python musl-dev make nodejs-dev fontconfig-dev && \
+    export GOROOT_BOOTSTRAP="$(go env GOROOT)" && \
+    wget -q "$GOLANG_SRC_URL" -O golang.tar.gz && \
+    echo "$GOLANG_SRC_SHA256  golang.tar.gz" | sha256sum -c - && \
+    tar -C /usr/local -xzf golang.tar.gz && \
+    rm golang.tar.gz && \
+    cd /usr/local/go/src && \
+    ./make.bash && \
     export GOPATH=/go && \
+    export PATH=/usr/local/go/bin:$PATH && \
+    go version && \
     mkdir -p $GOPATH/src/github.com/grafana && cd $GOPATH/src/github.com/grafana && \
     git clone https://github.com/grafana/grafana.git -b v${GRAFANA_VERSION} &&\
     cd grafana && \
@@ -25,7 +37,7 @@ RUN apk update && apk upgrade && \
     mkdir -p /etc/grafana/json /var/lib/grafana/plugins /var/log/grafana /usr/share/grafana && \
     mv ./public_gen /usr/share/grafana/public && \
     mv ./conf /usr/share/grafana/conf && \
-    apk del build-deps && cd / && rm -rf /var/cache/apk/* /usr/local/share/.cache $GOPATH
+    apk del build-deps && cd / && rm -rf /var/cache/apk/* /usr/local/share/.cache $GOPATH /usr/local/go
 
 VOLUME ["/var/lib/grafana", "/var/lib/grafana/plugins", "/var/log/grafana"]
 
