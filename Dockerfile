@@ -2,11 +2,11 @@ FROM appcelerator/alpine:3.5.2
 
 RUN apk --no-cache add nodejs
 
-ENV GRAFANA_VERSION 4.2.0
+ENV GRAFANA_VERSION 4.3.2
 
-ENV GOLANG_VERSION 1.8
+ENV GOLANG_VERSION 1.8.3
 ENV GOLANG_SRC_URL https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz
-ENV GOLANG_SRC_SHA256 406865f587b44be7092f206d73fc1de252600b79b3cacc587b74b5ef5c623596
+ENV GOLANG_SRC_SHA256 5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6
 
 RUN apk update && apk upgrade && \
     apk --no-cache add fontconfig && \
@@ -28,7 +28,7 @@ RUN apk update && apk upgrade && \
     npm install -g grunt-cli@1.2.0 && \
     go run build.go setup && \
     go run build.go build && \
-    yarn install && \
+    yarn install --pure-lockfile && \
     npm run build && \
     npm uninstall -g yarn && \
     npm uninstall -g grunt-cli && \

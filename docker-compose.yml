@@ -9,9 +9,6 @@ services:
       OUTPUT_INFLUXDB_ENABLED: "true"
       INFLUXDB_URL: "http://influxdb:8086"
       INPUT_DOCKER_ENABLED: "true"
-    labels:
-      - "ServiceUUId=system.telegraf"
-      - "io.appcelerator.amp.build.mounts=/var/run/docker.sock,/var/run/utmp"
 
   influxdb:
     image: appcelerator/influxdb:latest
@@ -22,8 +19,6 @@ services:
       FORCE_HOSTNAME: auto
       CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.5.0.tar.gz"
       PRE_CREATE_DB: "telegraf"
-    labels:
-      - "ServiceUUId=system.influxdb"
 
   grafana:
     image: appcelerator/grafana
@@ -40,5 +35,3 @@ services:
       INFLUXDB_PASS: changeme
       GRAFANA_USER: admin
       GRAFANA_PASS: AxwayPassword*
-    labels:
-      - "ServiceUUId=system.grafana"
