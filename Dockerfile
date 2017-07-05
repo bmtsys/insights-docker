@@ -2,14 +2,14 @@ FROM appcelerator/alpine:3.5.2
 
 RUN apk --no-cache add nodejs
 
-ENV GRAFANA_VERSION 4.3.2
+ENV GRAFANA_VERSION 4.4.1
 
 ENV GOLANG_VERSION 1.8.3
 ENV GOLANG_SRC_URL https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz
 ENV GOLANG_SRC_SHA256 5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6
 
 RUN apk update && apk upgrade && \
-    apk --no-cache add fontconfig && \
+    apk add fontconfig && \
     apk --virtual build-deps add build-base go openssl git gcc python musl-dev make nodejs-dev fontconfig-dev && \
     export GOROOT_BOOTSTRAP="$(go env GOROOT)" && \
     wget -q "$GOLANG_SRC_URL" -O golang.tar.gz && \

@@ -27,6 +27,9 @@ GRAFANA_PASS | Admin password | changeme |
 GRAFANA_PLUGIN_LIST | Space separated list of plugins to install | | grafana-piechart-panel
 EXECUTE_ALERTS | Makes it possible to turn off alert rule execution | true | false
 DISABLE_LOGIN_FORM | Set to true to disable (hide) the login form, useful if you use OAuth | false | true
+ENABLE_AUTH_ANONYMOUS | Enables anonymous access | false | true
+ORG_NAME | organization name that should be used for unauthenticated users | Main Org. |
+ANONYMOUS_ROLE | role for unauthenticated users | Viewer | Editor
 
 ## Grafana container with persistent storage (recommended)
 
@@ -60,4 +63,5 @@ The archive should contain under a top directory at least one of these directori
 - ```grafana-4.0```, ```grafana-4.0.2```
 - ```grafana-4.1```, ```grafana-4.1.1-1```
 - ```grafana-4.2```, ```grafana-4.2.0```
-- ```grafana-4.3```, ```grafana-4.3.2```, ```latest```
+- ```grafana-4.3```, ```grafana-4.3.2```
+- ```grafana-4.4```, ```grafana-4.4.1```, ```latest```
