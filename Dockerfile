@@ -1,16 +1,20 @@
-FROM appcelerator/alpine:3.5.2
+FROM appcelerator/alpine:3.6.0
 
-RUN apk --no-cache add nodejs
+RUN apk --no-cache upgrade
+RUN apk --no-cache add nodejs-current
 
-ENV GRAFANA_VERSION 4.4.1
+ENV GRAFANA_VERSION 4.4.3
 
-ENV GOLANG_VERSION 1.8.3
-ENV GOLANG_SRC_URL https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz
-ENV GOLANG_SRC_SHA256 5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6
+ENV GOLANG_VERSION 1.9
+ENV GOLANG_SRC_URL https://storage.googleapis.com/golang/go$GOLANG_VERSION.src.tar.gz
+ENV GOLANG_SRC_SHA256 a4ab229028ed167ba1986825751463605264e44868362ca8e7accc8be057e993
 
-RUN apk update && apk upgrade && \
-    apk add fontconfig && \
-    apk --virtual build-deps add build-base go openssl git gcc python musl-dev make nodejs-dev fontconfig-dev && \
+COPY grafana-pr-8808.diff /tmp/
+
+RUN apk update && apk add fontconfig && \
+    echo "Installing build dependencies" && \
+    apk --virtual build-deps add build-base openssl go git gcc python musl-dev make nodejs-dev fontconfig-dev nodejs-current-npm patch && \
+    echo "Installing Go" && \
     export GOROOT_BOOTSTRAP="$(go env GOROOT)" && \
     wget -q "$GOLANG_SRC_URL" -O golang.tar.gz && \
     echo "$GOLANG_SRC_SHA256  golang.tar.gz" | sha256sum -c - && \
@@ -21,23 +25,29 @@ RUN apk update && apk upgrade && \
     export GOPATH=/go && \
     export PATH=/usr/local/go/bin:$PATH && \
     go version && \
+    npm install npm@latest -g && \
+    npm --version && \
     mkdir -p $GOPATH/src/github.com/grafana && cd $GOPATH/src/github.com/grafana && \
     git clone https://github.com/grafana/grafana.git -b v${GRAFANA_VERSION} &&\
     cd grafana && \
-    npm install -g yarn@0.19.0 && \
+    patch package.json < /tmp/grafana-pr-8808.diff && \
+    rm /tmp/grafana-*.diff && \
+    npm install -g yarn@0.27.5 && \
     npm install -g grunt-cli@1.2.0 && \
     go run build.go setup && \
     go run build.go build && \
     yarn install --pure-lockfile && \
+    npm --version && \
     npm run build && \
     npm uninstall -g yarn && \
     npm uninstall -g grunt-cli && \
-    npm cache clear && \
+    npm cache --force clear && \
     mv ./bin/grafana-server ./bin/grafana-cli /bin/ && \
     mkdir -p /etc/grafana/json /var/lib/grafana/plugins /var/log/grafana /usr/share/grafana && \
     mv ./public_gen /usr/share/grafana/public && \
     mv ./conf /usr/share/grafana/conf && \
-    apk del build-deps && cd / && rm -rf /var/cache/apk/* /usr/local/share/.cache $GOPATH /usr/local/go
+    echo "Removing build dependencies" && \
+    apk del build-deps && cd / && rm -rf /var/cache/apk/* /usr/local/share/.cache $GOPATH /usr/local/go /root/.npm /root/.node-gyp /root/.config /tmp/phantomjs /tmp/*compile-cache* /usr/lib/node_modules/npm
 
 VOLUME ["/var/lib/grafana", "/var/lib/grafana/plugins", "/var/log/grafana"]
 
@@ -59,4 +69,4 @@ COPY ./run.sh /run.sh
 ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/run.sh"]
 
-HEALTHCHECK --interval=5s --retries=5 --timeout=2s CMD curl -u $GRAFANA_USER:$GRAFANA_PASS 127.0.0.1:3000/api/org 2>/dev/null | grep -q '"id":'
+#HEALTHCHECK --interval=5s --retries=5 --timeout=2s CMD curl -u $GRAFANA_USER:$GRAFANA_PASS 127.0.0.1:3000/api/org 2>/dev/null | grep -q '"id":'

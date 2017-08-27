@@ -12,12 +12,13 @@ services:
 
   influxdb:
     image: appcelerator/influxdb:latest
-    ports:
-      - "8086:8086"
-      - "8083:8083"
+    #ports:
+      #- "8086:8086"
+      #- "8083:8083"
+    volumes:
+      - ./docker-compose.d/influxdb:/etc/extra-config/influxdb
     environment:
       FORCE_HOSTNAME: auto
-      CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.5.0.tar.gz"
       PRE_CREATE_DB: "telegraf"
 
   grafana:
@@ -25,10 +26,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-     - "3000:3000"
+    #ports:
+     #- "3000:3000"
+    volumes:
+      - ./docker-compose.d/grafana:/etc/extra-config/grafana
     environment:
-      CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.5.0.tar.gz"
       GRAFANA_PLUGIN_LIST: "grafana-piechart-panel"
       FORCE_HOSTNAME: auto
       INFLUXDB_HOST: influxdb
