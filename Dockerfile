@@ -3,13 +3,11 @@ FROM appcelerator/alpine:3.6.0
 RUN apk --no-cache upgrade
 RUN apk --no-cache add nodejs-current
 
-ENV GRAFANA_VERSION 4.4.3
+ENV GRAFANA_VERSION 4.5.1
 
 ENV GOLANG_VERSION 1.9
 ENV GOLANG_SRC_URL https://storage.googleapis.com/golang/go$GOLANG_VERSION.src.tar.gz
 ENV GOLANG_SRC_SHA256 a4ab229028ed167ba1986825751463605264e44868362ca8e7accc8be057e993
-
-COPY grafana-pr-8808.diff /tmp/
 
 RUN apk update && apk add fontconfig && \
     echo "Installing build dependencies" && \
@@ -30,8 +28,6 @@ RUN apk update && apk add fontconfig && \
     mkdir -p $GOPATH/src/github.com/grafana && cd $GOPATH/src/github.com/grafana && \
     git clone https://github.com/grafana/grafana.git -b v${GRAFANA_VERSION} &&\
     cd grafana && \
-    patch package.json < /tmp/grafana-pr-8808.diff && \
-    rm /tmp/grafana-*.diff && \
     npm install -g yarn@0.27.5 && \
     npm install -g grunt-cli@1.2.0 && \
     go run build.go setup && \
