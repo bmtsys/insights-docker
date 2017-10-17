@@ -65,4 +65,4 @@ The archive should contain under a top directory at least one of these directori
 - ```grafana-4.2```, ```grafana-4.2.0```
 - ```grafana-4.3```, ```grafana-4.3.2```
 - ```grafana-4.4```, ```grafana-4.4.3```
-- ```grafana-4.5```, ```grafana-4.5.1```, ```latest```
+- ```grafana-4.5```, ```grafana-4.5.2```, ```latest```
