@@ -3,11 +3,11 @@ FROM appcelerator/alpine:3.6.0
 RUN apk --no-cache upgrade
 RUN apk --no-cache add nodejs-current
 
-ENV GRAFANA_VERSION 4.5.2
+ENV GRAFANA_VERSION 4.6.1
 
-ENV GOLANG_VERSION 1.9.1
+ENV GOLANG_VERSION 1.9.2
 ENV GOLANG_SRC_URL https://storage.googleapis.com/golang/go$GOLANG_VERSION.src.tar.gz
-ENV GOLANG_SRC_SHA256 a84afc9dc7d64fe0fa84d4d735e2ece23831a22117b50dafc75c1484f1cb550e
+ENV GOLANG_SRC_SHA256 665f184bf8ac89986cfd5a4460736976f60b57df6b320ad71ad4cef53bb143dc
 
 RUN apk update && apk add fontconfig && \
     echo "Installing build dependencies" && \
@@ -40,7 +40,7 @@ RUN apk update && apk add fontconfig && \
     npm cache --force clear && \
     mv ./bin/grafana-server ./bin/grafana-cli /bin/ && \
     mkdir -p /etc/grafana/json /var/lib/grafana/plugins /var/log/grafana /usr/share/grafana && \
-    mv ./public_gen /usr/share/grafana/public && \
+    mv ./public /usr/share/grafana/public && \
     mv ./conf /usr/share/grafana/conf && \
     echo "Removing build dependencies" && \
     apk del build-deps && cd / && rm -rf /var/cache/apk/* /usr/local/share/.cache $GOPATH /usr/local/go /root/.npm /root/.node-gyp /root/.config /tmp/phantomjs /tmp/*compile-cache* /usr/lib/node_modules/npm
