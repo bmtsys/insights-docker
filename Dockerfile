@@ -1,9 +1,9 @@
 FROM appcelerator/alpine:3.6.0
 
 RUN apk --no-cache upgrade
-RUN apk --no-cache add nodejs-current
+RUN apk --no-cache add nodejs-current tini@community
 
-ENV GRAFANA_VERSION 4.6.1
+ENV GRAFANA_VERSION 4.6.2
 
 ENV GOLANG_VERSION 1.9.2
 ENV GOLANG_SRC_URL https://storage.googleapis.com/golang/go$GOLANG_VERSION.src.tar.gz
@@ -62,7 +62,7 @@ ENV GRAFANA_PASS changeme
 COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
 COPY ./run.sh /run.sh
 
-ENTRYPOINT ["/bin/sh", "-c"]
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["/run.sh"]
 
 #HEALTHCHECK --interval=5s --retries=5 --timeout=2s CMD curl -u $GRAFANA_USER:$GRAFANA_PASS 127.0.0.1:3000/api/org 2>/dev/null | grep -q '"id":'
