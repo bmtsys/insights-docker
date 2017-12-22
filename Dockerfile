@@ -3,7 +3,7 @@ FROM appcelerator/alpine:3.7.0
 RUN apk --no-cache upgrade
 RUN apk --no-cache add nodejs fontconfig
 
-ENV GRAFANA_VERSION 4.6.2
+ENV GRAFANA_VERSION 4.6.3
 
 ENV GOLANG_VERSION 1.9.2
 ENV GOLANG_SRC_URL https://storage.googleapis.com/golang/go$GOLANG_VERSION.src.tar.gz
