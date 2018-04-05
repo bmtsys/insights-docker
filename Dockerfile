@@ -1,13 +1,13 @@
-FROM appcelerator/alpine:3.7.0
+FROM appcelerator/alpine:3.7.1
 
 RUN apk --no-cache upgrade
 RUN apk --no-cache add nodejs fontconfig
 
-ENV GRAFANA_VERSION 5.0.3
+ENV GRAFANA_VERSION 5.0.4
 
-ENV GOLANG_VERSION 1.10
+ENV GOLANG_VERSION 1.10.1
 ENV GOLANG_SRC_URL https://storage.googleapis.com/golang/go$GOLANG_VERSION.src.tar.gz
-ENV GOLANG_SRC_SHA256 f3de49289405fda5fd1483a8fe6bd2fa5469e005fd567df64485c4fa000c7f24
+ENV GOLANG_SRC_SHA256 589449ff6c3ccbff1d391d4e7ab5bb5d5643a5a41a04c99315e55c16bbf73ddc
 
 RUN echo "Installing build dependencies" && \
     apk --virtual build-deps --no-cache add build-base openssl go git gcc python musl-dev make fontconfig-dev nodejs-dev yarn patch && \

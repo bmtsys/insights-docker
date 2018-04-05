@@ -75,6 +75,9 @@ fi
 : "${GF_PATHS_DATA:=/var/lib/grafana}"
 : "${GF_PATHS_LOGS:=/var/log/grafana}"
 : "${GF_PATHS_PLUGINS:=/var/lib/grafana/plugins}"
+: "${GF_PATHS_PROVISIONING:=/var/lib/grafana/provisioning}"
+
+mkdir -p $GF_PATHS_PROVISIONING/dashboards $GF_PATHS_PROVISIONING/datasources
 
 if [[ ! -x $GRAFANA_BIN ]]; then
   echo "can't find executable at $GRAFANA_BIN"
@@ -115,6 +118,7 @@ if [[ $should_configure -eq 1 ]]; then
       cfg:default.paths.data="$GF_PATHS_DATA"   \
       cfg:default.paths.logs="$GF_PATHS_LOGS"   \
       cfg:default.paths.plugins="$GF_PATHS_PLUGINS" \
+      cfg:default.paths.provisioning=$GF_PATHS_PROVISIONING \
       web &
     sleep 0.2
     echo "Checking that grafana is up..."
@@ -159,5 +163,6 @@ CMDARGS="--homepath=/usr/share/grafana        \
   cfg:default.paths.data=$GF_PATHS_DATA       \
   cfg:default.paths.logs=$GF_PATHS_LOGS       \
   cfg:default.paths.plugins=$GF_PATHS_PLUGINS \
+  cfg:default.paths.provisioning=$GF_PATHS_PROVISIONING \
   web"
 exec "$CMD" $CMDARGS
