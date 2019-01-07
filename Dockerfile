@@ -25,7 +25,7 @@ RUN echo "Installing build dependencies" && \
     yarn --version && yarn global add npm && \
     npm --version && \
     mkdir -p $GOPATH/src/github.com/grafana && cd $GOPATH/src/github.com/grafana && \
-    git clone https://github.com/bmtsys/grafana_bmtech.git &&\
+    git clone -b grafana_bmtech https://github.com/bmtsys/grafana_bmtech.git &&\
     cd grafana_bmtech && \
     yarn global add grunt-cli@1.2.0 && \
     go run build.go setup && \
