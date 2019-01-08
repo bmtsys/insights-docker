@@ -56,9 +56,9 @@ ENV GRAFANA_PASS changeme
 #ENV FORCE_HOSTNAME
 
 COPY ./grafana.ini /usr/share/grafana/conf/defaults.ini.tpl
-COPY ./run.sh /run.sh
+#COPY ./run.sh /run.sh
 
-ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["/run.sh"]
+#ENTRYPOINT ["/sbin/tini", "--"]
+#CMD ["/run.sh"]
 
 #HEALTHCHECK --interval=5s --retries=5 --timeout=2s CMD curl -u $GRAFANA_USER:$GRAFANA_PASS 127.0.0.1:3000/api/org 2>/dev/null | grep -q '"id":'
