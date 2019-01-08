@@ -35,7 +35,6 @@ RUN echo "Installing build dependencies" && \
     npm cache --force clear && \
     yarn remove grunt-cli && \
     yarn remove npm && \
-    mv ./bin/grafana-server ./bin/grafana-cli /bin/ && \
     mkdir -p /etc/grafana/json /var/lib/grafana/plugins /var/log/grafana /usr/share/grafana && \
     mv ./public /usr/share/grafana/public && \
     mv ./conf /usr/share/grafana/conf && \
